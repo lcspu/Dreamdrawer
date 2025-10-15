@@ -1607,7 +1607,6 @@ class PixelArtGUI(QMainWindow):
             return False
         return True
 
-# Main application
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     # Enable high DPI scaling
