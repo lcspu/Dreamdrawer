@@ -1,7 +1,7 @@
 # 项目数字 22
 import sys, os, threading, websocket, json, time, argparse, builtins
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget, QGroupBox, QLabel, QLineEdit, QPushButton, QCheckBox, QProgressBar, QTextEdit, QFileDialog, QMessageBox, QFrame, QScrollArea, QGridLayout, QSizePolicy)
-from PyQt5.QtCore import Qt, QThread, pyqtSignal, QSize
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QSize, QMutex, QMutexLocker
 from PyQt5.QtGui import QFont, QPalette, QColor, QTextCursor, QFontDatabase, QPixmap, QIcon
 from PIL import Image
 
@@ -21,15 +21,17 @@ SQUARE_HEIGHT = 8
 deployment_active = False
 current_ws_connections = []
 global_log_function = None
+log_mutex = QMutex() # Thread-safe logging
 
 # Custom print function that redirects to GUI log
 def print(*args, **kwargs):
     message = ' '.join(str(arg) for arg in args)
-    if global_log_function:
-        global_log_function(message)
-    else:
-        # Fallback to regular print if GUI not available 
-        builtins.print(message, **kwargs)
+    with QMutexLocker(log_mutex):
+        if global_log_function:
+            global_log_function(message)
+        else:
+            # Fallback to regular print if GUI not available
+            builtins.print(message, **kwargs)
 
 # Get absolute path to resource
 def resource_path(relative_path):
@@ -192,14 +194,14 @@ def ascii_single_mode(args):
             repetition_count = 0
             while deployment_active:
                 repetition_count += 1
-                print(f"[!] Repetition {repetition_count} (infinite mode)")
+                # print(f"[!] Repetition {repetition_count} (infinite mode)")
                 for i in range(0, len(all_edits), args.chunk_size):
                     if not deployment_active:
                         break
                     chunk = all_edits[i:i + args.chunk_size]
                     payload = {"kind": "write", "edits": chunk}
                     ws.send(json.dumps(payload))
-                    print(f"Sent chunk {i // args.chunk_size + 1}")
+                    # print(f"Sent chunk {i // args.chunk_size + 1}")
                     time.sleep(args.sleep_between)
                 if not deployment_active:
                     break
@@ -207,14 +209,14 @@ def ascii_single_mode(args):
             for repeat in range(args.repeat):
                 if not deployment_active:
                     break
-                print(f"[!] Repetition {repeat + 1}/{args.repeat}")
+                # print(f"[!] Repetition {repeat + 1}/{args.repeat}")
                 for i in range(0, len(all_edits), args.chunk_size):
                     if not deployment_active:
                         break
                     chunk = all_edits[i:i + args.chunk_size]
                     payload = {"kind": "write", "edits": chunk}
                     ws.send(json.dumps(payload))
-                    print(f"Sent chunk {i // args.chunk_size + 1}")
+                    # print(f"Sent chunk {i // args.chunk_size + 1}")
                     time.sleep(args.sleep_between)
                 if not deployment_active:
                     break
@@ -303,14 +305,14 @@ def ascii_threading_mode(args):
                 repetition_count = 0
                 while deployment_active:
                     repetition_count += 1
-                    print(f"[{proxy['host']}:{proxy['port']}] [!] Repetition {repetition_count} (infinite mode)")
+                    # print(f"[{proxy['host']}:{proxy['port']}] [!] Repetition {repetition_count} (infinite mode)")
                     for i in range(0, len(edits), args.chunk_size):
                         if not deployment_active:
                             break
                         chunk = edits[i:i + args.chunk_size]
                         payload = {"kind": "write", "edits": chunk}
                         ws.send(json.dumps(payload))
-                        print(f"[{proxy['host']}:{proxy['port']}] Sent chunk {i // args.chunk_size + 1}")
+                        # print(f"[{proxy['host']}:{proxy['port']}] Sent chunk {i // args.chunk_size + 1}")
                         time.sleep(args.sleep_between)
                     if not deployment_active:
                         break
@@ -318,14 +320,14 @@ def ascii_threading_mode(args):
                 for repeat in range(args.repeat):
                     if not deployment_active:
                         break
-                    print(f"[{proxy['host']}:{proxy['port']}] [!] Repetition {repeat + 1}/{args.repeat}")
+                    # print(f"[{proxy['host']}:{proxy['port']}] [!] Repetition {repeat + 1}/{args.repeat}")
                     for i in range(0, len(edits), args.chunk_size):
                         if not deployment_active:
                             break
                         chunk = edits[i:i + args.chunk_size]
                         payload = {"kind": "write", "edits": chunk}
                         ws.send(json.dumps(payload))
-                        print(f"[{proxy['host']}:{proxy['port']}] Sent chunk {i // args.chunk_size + 1}")
+                        # print(f"[{proxy['host']}:{proxy['port']}] Sent chunk {i // args.chunk_size + 1}")
                         time.sleep(args.sleep_between)
                     if not deployment_active:
                         break
@@ -423,14 +425,14 @@ def image_single_mode(args):
             repetition_count = 0
             while deployment_active:
                 repetition_count += 1
-                print(f"[!] Repetition {repetition_count} (infinite mode)")
+                # print(f"[!] Repetition {repetition_count} (infinite mode)")
                 for i in range(0, len(edits), args.chunk_size):
                     if not deployment_active:
                         break
                     chunk = edits[i:i + args.chunk_size]
                     payload = {"kind": "write", "edits": chunk}
                     ws.send(json.dumps(payload))
-                    print(f"Chunk {i // args.chunk_size + 1} sent.")
+                    # print(f"Chunk {i // args.chunk_size + 1} sent.")
                     time.sleep(args.sleep_between)
                 if not deployment_active:
                     break
@@ -438,14 +440,14 @@ def image_single_mode(args):
             for repeat in range(args.repeat):
                 if not deployment_active:
                     break
-                print(f"[!] Repetition {repeat + 1}/{args.repeat}")
+                # print(f"[!] Repetition {repeat + 1}/{args.repeat}")
                 for i in range(0, len(edits), args.chunk_size):
                     if not deployment_active:
                         break
                     chunk = edits[i:i + args.chunk_size]
                     payload = {"kind": "write", "edits": chunk}
                     ws.send(json.dumps(payload))
-                    print(f"Chunk {i // args.chunk_size + 1} sent.")
+                    # print(f"Chunk {i // args.chunk_size + 1} sent.")
                     time.sleep(args.sleep_between)
                 if not deployment_active:
                     break
@@ -553,14 +555,14 @@ def image_threading_mode(args):
                 repetition_count = 0
                 while deployment_active:
                     repetition_count += 1
-                    print(f"[{proxy['host']}:{proxy['port']}] [!] Repetition {repetition_count} (infinite mode)")
+                    # print(f"[{proxy['host']}:{proxy['port']}] [!] Repetition {repetition_count} (infinite mode)")
                     for i in range(0, len(edits), args.chunk_size):
                         if not deployment_active:
                             break
                         chunk = edits[i:i + args.chunk_size]
                         payload = {"kind": "write", "edits": chunk}
                         ws.send(json.dumps(payload))
-                        print(f"[{proxy['host']}:{proxy['port']}] Sent chunk {i // args.chunk_size + 1}")
+                        # print(f"[{proxy['host']}:{proxy['port']}] Sent chunk {i // args.chunk_size + 1}")
                         time.sleep(args.sleep_between)
                     if not deployment_active:
                         break
@@ -568,14 +570,14 @@ def image_threading_mode(args):
                 for repeat in range(args.repeat):
                     if not deployment_active:
                         break
-                    print(f"[{proxy['host']}:{proxy['port']}] [!] Repetition {repeat + 1}/{args.repeat}")
+                    # print(f"[{proxy['host']}:{proxy['port']}] [!] Repetition {repeat + 1}/{args.repeat}")
                     for i in range(0, len(edits), args.chunk_size):
                         if not deployment_active:
                             break
                         chunk = edits[i:i + args.chunk_size]
                         payload = {"kind": "write", "edits": chunk}
                         ws.send(json.dumps(payload))
-                        print(f"[{proxy['host']}:{proxy['port']}] Sent chunk {i // args.chunk_size + 1}")
+                        # print(f"[{proxy['host']}:{proxy['port']}] Sent chunk {i // args.chunk_size + 1}")
                         time.sleep(args.sleep_between)
                     if not deployment_active:
                         break
@@ -864,6 +866,20 @@ class HeaderImageLabel(QLabel):
         self.setFixedSize(490, 80)
         return True
 
+class ThreadSafeTextEdit(QTextEdit):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._mutex = QMutex()
+        
+    def safe_append(self, text):
+        with QMutexLocker(self._mutex):
+            self.append(text)
+            # Auto-scroll to bottom
+            cursor = self.textCursor()
+            cursor.movePosition(QTextCursor.End)
+            self.setTextCursor(cursor)
+            self.ensureCursorVisible()
+
 class PixelArtGUI(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -1046,7 +1062,7 @@ class PixelArtGUI(QMainWindow):
         log_label.setMaximumHeight(18)
         main_layout.addWidget(log_label)
         
-        self.log_text = DreamaTextEdit()
+        self.log_text = ThreadSafeTextEdit() # thread-safe text edit
         self.log_text.setMinimumHeight(100)
         self.log_text.setMaximumHeight(100)
         main_layout.addWidget(self.log_text)
@@ -1415,13 +1431,11 @@ class PixelArtGUI(QMainWindow):
                 self.proxy_file_edit_image_threading.setText(filename)
             
     def clear_log(self):
-        self.log_text.clear()
+        with QMutexLocker(self.log_text._mutex):
+            self.log_text.clear()
         
     def log_message(self, message):
-        self.log_text.append(message)
-        cursor = self.log_text.textCursor()
-        cursor.movePosition(QTextCursor.End)
-        self.log_text.setTextCursor(cursor)
+        self.log_text.safe_append(message)
         
     def start_deployment(self):
         if self.deployment_thread and self.deployment_thread.isRunning():
@@ -1607,6 +1621,7 @@ class PixelArtGUI(QMainWindow):
             return False
         return True
 
+# Main application
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     # Enable high DPI scaling
