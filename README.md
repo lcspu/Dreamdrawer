@@ -1,6 +1,7 @@
 <p align="center">
   <img src="./header.png">
 </p>
+
 ## 📖 Overview
 **DreamDrawer** is a lightweight Python + Qt GUI utility that lets you draw ASCII art or paste images directly onto the canvas of [OurWorldOfText](https://ourworldoftext.com).
 It communicates via raw sockets, supports multi-threading & proxies, and divides the canvas for pixel-perfect placement.
@@ -67,6 +68,7 @@ $  pyinstaller --onefile --windowed --name "DreamDrawer" --clean --add-data "hea
 <p align="center">
   <img src="./2.gif">
 </p>
+
 ### Wiping Option
 <p align="center">
   <img src="./1.gif">
