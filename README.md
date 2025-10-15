@@ -24,7 +24,7 @@ It communicates via raw sockets, supports multi-threading & proxies, and divides
 | ASCII 📝 | Use ASCII characters to express your arts |
 | Quadrants / Blocks 🧩 | Use custom geometric Shapes characters for clear drawings |
 | Threading ⚡ | Parallel workers with faster fills and minimal lag |
-| Proxy 🌐 | Route traffic through SOCKS4/5 or HTTP proxies |
+| Proxy 🌐 | Route traffic through SOCKS4/5 or HTTP proxies or none |
 | Wiping 🧹 | Clean your existing arts to make place for anothers |
 
 ## 🚀 Quick Start
