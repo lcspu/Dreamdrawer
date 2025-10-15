@@ -59,7 +59,7 @@ $  pyinstaller --onefile --windowed --name "DreamDrawer" --clean --add-data "hea
 ## 🛠️ Usage Tips
 | Feature             | Description                                                                |
 | ----------------- | ------------------------------------------------------------------ |
-| Position | Choose the starting point of the paste as shown in the picture (X,Y) |
+| Position | Choose the starting point of the paste as shown in the picture (cursor first X,Y) |
 | Wipe Mode | Can be uses to delete pastes by printing empty characters in the form of the image/ASCII |
 | Repeat | Choose how many repeatitions input (inf) if you want infinite |
 | Chunks & sleep | Preconfigured values that goes with the server capacity. Any changes may result in empty parts of the drawing or may cause lags or DOS/DDOS |
