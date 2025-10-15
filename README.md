@@ -35,8 +35,8 @@ Directly execute the release version :P
 
 1. Clone the repo
 ```bash
-$  git clone https://github.com/yourname/SkyDrawer.git
-$  cd SkyDrawer
+$  git clone https://github.com/lcspu/Dreamdrawer.git
+$  cd Dreamdrawer
 ```
 2. Create and activate venv (recommended)
 ```bash
