@@ -6,7 +6,7 @@
 **DreamDrawer** is a lightweight Python + Qt GUI utility that lets you draw ASCII art or paste images directly onto the canvas of [OurWorldOfText](https://ourworldoftext.com).
 It communicates via raw sockets, supports multi-threading & proxies, and divides the canvas for pixel-perfect placement.
 <p align="center">
-  <img src="./3.png">
+  <img src="./.github/3.png">
 </p>
 
 ## ⚠️ Responsible Use Disclaimer
@@ -66,12 +66,12 @@ $  pyinstaller --onefile --windowed --name "DreamDrawer" --clean --add-data "hea
 | Color / BG color | Hex value of the ASCII and ASCII threading mods |
 ### Image Threading Mode
 <p align="center">
-  <img src="./2.gif">
+  <img src="./.github/2.gif">
 </p>
 
 ### Wiping Option
 <p align="center">
-  <img src="./1.gif">
+  <img src="./.github/1.gif">
 </p>
 
 ## 🔮 Upcoming Features
