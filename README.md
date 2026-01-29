@@ -84,8 +84,3 @@ $  pyinstaller --onefile --windowed --name "DreamDrawer" --clean --add-data "hea
 | ***Full Legacy Chars ᝰ.ᐟ*** | Self-explanatory |
 | ***Chat Utilities 💬*** | Full toolkit for messing up with OWOT chats |
 | ***Links Paster 🔗*** | Advertise everywhere anywhere from an x,y to another x,y |
-
-## 🤝 Contributing
-Feel free to fork, modify, change anything related to this project and kindly mention this original source.
-
-## ⭐ Adding a Star would mean a lot :^
